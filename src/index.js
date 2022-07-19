@@ -5,20 +5,25 @@
 // const countriesList = document.querySelector('.country-list');
 
 
+//!   1.2.Добавляем новую разметку в div-контейнер с помощью insertAdjacentHTML:
+// countryInfoContainer.insertAdjacentHTML('beforeend', createCountriCardMarkup);
+
 
 
 //!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import './css/styles.css';
-
+import Notiflix from 'notiflix';
+// import axios from 'axios';
 import debounce from 'lodash.debounce';
-
 import getRefs from './js/get-refs.js'; //! Импорт всех ссылок с ./js/get-refs.js
+
+import API from './js/api-service.js';
 
 const refs = getRefs(); //! Создаем объект всех ссылок refs.*
 
 
-const DEBOUNCE_DELAY = 300;
+const DEBOUNCE_DELAY = 500;
 
 //!  Создаем слушателя событий на поле ввода данных - input:
 refs.input.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY)); //! сюда вешаем DEBOUNCE_DELAY = 300;
@@ -29,34 +34,30 @@ function onInput(evt) {
     evt.preventDefault(); //? отменить действие по умолчанию - preventDefault().
 
     // console.log("Вешаю слушателя на поле ввода данных - input");
-    const t = evt.target.value;
-    console.log(t);
-}
+    const countryInput = evt.target.value; //! countryInput - данные с input
+    console.log(countryInput);
 
+    //! Очищаем разметку
+    deleteMarkup()
 
-
-//*  Вызываем ф-ция, которая делает HTTP-запрос
-fetchCountries("un")
-    .then(renderCountriesCard) //* Рисование интерфейса выносим в отдельную ф-цию - renderCountriesCard
-    .catch(error => console.log(error));
-
-
-//*   Ф-ция, которая делает HTTP-запрос на ресурс name 
-//*  и возвращает промис с массивом стран по ID или Name:
-function fetchCountries(name) {
-    return fetch(`https://restcountries.com/v3.1/name/${name}`)
-        .then(response => {
-            return response.json();
-        })
+    //!  Вызываем ф-ция, которая делает HTTP-запрос:
+    API.fetchCountries(countryInput)
+        .then(renderCountriesCard) //* Рисование интерфейса выносим в отдельную ф-цию 
+        .catch(onFetchError); //! Выдаем ошибку, если страна не найдена:
+    // renderCountriesCard(data)
 
 }
 
 
+//! Ф-ция, которая очищает разметку
+function deleteMarkup() {
+    refs.countriesList.innerHTML = "";
+    refs.countryInfoContainer.innerHTML = "";
+}
 
 
 
-//!   1.2.Добавляем новую разметку в div-контейнер с помощью insertAdjacentHTML:
-// countryInfoContainer.insertAdjacentHTML('beforeend', createCountriCardMarkup);
+
 
 //?   1.1.Ф-ция, к-рая создает массив с новой разметкой для ОДНОЙ страны:
 function createCountryCardMarkup(countries) {
@@ -83,6 +84,7 @@ function createCountryCardMarkup(countries) {
 }
 
 
+
 //todo 2.1.Ф-ция, к-рая создает список для разметки СПИСКА стран:
 function createCountriesList(countries) {
     return countries
@@ -105,19 +107,45 @@ function createCountriesList(countries) {
         .join('');
 }
 
-//* Ф-ция, к-рая отрисовывает интерфейс:
+
+
+
+//*  Ф-ция-then, к-рая отрисовывает разный интерфейс 
+//*  в зависимости от полученного количества стран:
 function renderCountriesCard(countries) {
+    const numberOfCountries = countries.length
+    console.log("numberOfCountries = ", numberOfCountries);
     // тут надо ставить условие при котором выбирается разная функция для markup
+    if (numberOfCountries === 1) {
+        //? разметка ОДНОЙ страны:
+        // refs.countryInfoContainer.innerHTML = "";
+        const markup = createCountryCardMarkup(countries);
+        refs.countryInfoContainer.innerHTML = markup;
 
-    //? разметка ОДНОЙ страны:
-    // const markup = createCountryCardMarkup(countries);
-    // refs.countryInfoContainer.innerHTML = markup;
+    } else if (numberOfCountries > 1 && numberOfCountries <= 10) {
+        //todo разметка СПИСКА стран:
+        // refs.countriesList.innerHTML = "";
+        const markup = createCountriesList(countries);
+        refs.countriesList.innerHTML = markup;
 
-    //todo разметка СПИСКА стран:
-    const markup = createCountriesList(countries);
-    refs.countriesList.innerHTML = markup;
+    } else if (numberOfCountries > 10) {
+        refs.countriesList.innerHTML = "";
+        refs.countryInfoContainer.innerHTML = "";
+        Notiflix.Notify.success("Too many matches found. Please enter a more specific name.", { timeout: 3000, },);
+    }
+
+
+
+
+
 
     // console.log(markup);
 }
 
+//! Ф-ция-catch, к-рая отрисовывает ошибку, если страна не найдена:
+function onFetchError(error) {
+    // console.log(`Oops, there is no country with that name`); //!
+    // alert('Oops, there is no country with that name');
+    Notiflix.Notify.failure(`Oops, there is no country with that name`, { timeout: 3000, },);
 
+}
