@@ -9,7 +9,7 @@ import API from './js/api-service.js';
 const refs = getRefs(); //! Создаем объект всех ссылок refs.*
 
 
-const DEBOUNCE_DELAY = 300;
+const DEBOUNCE_DELAY = 500;
 
 //!  Создаем слушателя событий на поле ввода данных - input:
 refs.input.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY)); //! сюда вешаем DEBOUNCE_DELAY = 300;
@@ -61,9 +61,9 @@ function createCountryCardMarkup(countries) {
                         />
                         <h1 class="card-title">${official}</h1>
                     </div>
-                <p class="card-capital">Capital: ${capital}</p>
-                <p class="card-population">Population: ${population}</p>
-                <p class="card-languages">languages: ${valuesLanguages}</p>
+                <p class="card-capital"><span class="bold">Capital:</span> ${capital}</p>
+                <p class="card-population"><span class="bold">Population:</span> ${population}</p>
+                <p class="card-languages"><span class="bold">Languages:</span> ${valuesLanguages}</p>
                 </div>
             `;
         })
