@@ -1,17 +1,3 @@
-//? 1.0.Получаем ссылку на div-контейнер для разметки ОДНОЙ страны:
-// const countryInfoContainer = document.querySelector('.country-info');
-
-//todo 2.0.Получаем ссылку на список для разметки СПИСКА стран:
-// const countriesList = document.querySelector('.country-list');
-
-
-//!   1.2.Добавляем новую разметку в div-контейнер с помощью insertAdjacentHTML:
-// countryInfoContainer.insertAdjacentHTML('beforeend', createCountriCardMarkup);
-
-
-
-//!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 import './css/styles.css';
 import Notiflix from 'notiflix';
 // import axios from 'axios';
@@ -23,7 +9,7 @@ import API from './js/api-service.js';
 const refs = getRefs(); //! Создаем объект всех ссылок refs.*
 
 
-const DEBOUNCE_DELAY = 500;
+const DEBOUNCE_DELAY = 300;
 
 //!  Создаем слушателя событий на поле ввода данных - input:
 refs.input.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY)); //! сюда вешаем DEBOUNCE_DELAY = 300;
@@ -35,10 +21,12 @@ function onInput(evt) {
 
     // console.log("Вешаю слушателя на поле ввода данных - input");
     const countryInput = evt.target.value.trim(); //! countryInput - данные с input
-    console.log(countryInput);
+    // console.log(countryInput); //!
 
     //! Очищаем разметку перед HTTP-запросом
-    deleteMarkup()
+    deleteMarkup();
+
+    //! Проверка введенных данных с input на пустую строку
     if (countryInput === "") return;
 
     //!  Вызываем ф-ция, которая делает HTTP-запрос:
@@ -58,9 +46,7 @@ function deleteMarkup() {
 
 
 
-
-
-//?   1.1.Ф-ция, к-рая создает массив с новой разметкой для ОДНОЙ страны:
+//?   Ф-ция, к-рая создает массив с новой разметкой для ОДНОЙ страны:
 function createCountryCardMarkup(countries) {
     return countries
         .map(({ name: { official }, capital, population, flags: { svg }, languages }) => {
@@ -86,7 +72,7 @@ function createCountryCardMarkup(countries) {
 
 
 
-//todo 2.1.Ф-ция, к-рая создает список для разметки СПИСКА стран:
+//todo Ф-ция, к-рая создает список для разметки СПИСКА стран:
 function createCountriesList(countries) {
     return countries
         .map(({ name: { official }, flags: { svg }, languages }) => {
@@ -110,12 +96,11 @@ function createCountriesList(countries) {
 
 
 
-
 //*  Ф-ция-then, к-рая отрисовывает разный интерфейс 
 //*  в зависимости от полученного количества стран:
 function renderCountriesCard(countries) {
     const numberOfCountries = countries.length
-    console.log("numberOfCountries = ", numberOfCountries);
+    console.log("numberOfCountries = ", numberOfCountries); //!
     // тут надо ставить условие при котором выбирается разная функция для markup
     if (numberOfCountries === 1) {
         //? разметка ОДНОЙ страны:
@@ -130,13 +115,6 @@ function renderCountriesCard(countries) {
     } else if (numberOfCountries > 10) {
         Notiflix.Notify.success("Too many matches found. Please enter a more specific name.", { timeout: 3000, },);
     }
-
-
-
-
-
-
-    // console.log(markup);
 }
 
 //! Ф-ция-catch, к-рая отрисовывает ошибку, если страна не найдена:
@@ -144,5 +122,4 @@ function onFetchError(error) {
     // console.log(`Oops, there is no country with that name`); //!
     // alert('Oops, there is no country with that name');
     Notiflix.Notify.failure(`Oops, there is no country with that name`, { timeout: 3000, },);
-
 }
