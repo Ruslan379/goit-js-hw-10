@@ -19,6 +19,29 @@ body {
   margin-bottom: 16px;
 }
 
+/* img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+} */
+
+ a {
+  text-decoration: none;
+  color: #2a2a2a;
+  /* font-weight: bold; */
+  font-size: 20px;
+  /* color: red; */
+}
+
+ul {
+  list-style: none;
+}
+
+ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+
 .country-flag {
   display: flex;
   align-items: center;
@@ -27,4 +50,8 @@ body {
 
 .img-country-flag {
   margin-right: 10px;;
+}
+
+.country-image {
+  margin-right: 10px;
 }
