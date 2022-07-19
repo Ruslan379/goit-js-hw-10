@@ -37,7 +37,7 @@ function onInput(evt) {
     const countryInput = evt.target.value; //! countryInput - данные с input
     console.log(countryInput);
 
-    //! Очищаем разметку
+    //! Очищаем разметку перед HTTP-запросом
     deleteMarkup()
 
     //!  Вызываем ф-ция, которая делает HTTP-запрос:
@@ -49,7 +49,7 @@ function onInput(evt) {
 }
 
 
-//! Ф-ция, которая очищает разметку
+//! Ф-ция, которая очищает разметку перед HTTP-запросом
 function deleteMarkup() {
     refs.countriesList.innerHTML = "";
     refs.countryInfoContainer.innerHTML = "";
@@ -118,19 +118,15 @@ function renderCountriesCard(countries) {
     // тут надо ставить условие при котором выбирается разная функция для markup
     if (numberOfCountries === 1) {
         //? разметка ОДНОЙ страны:
-        // refs.countryInfoContainer.innerHTML = "";
         const markup = createCountryCardMarkup(countries);
         refs.countryInfoContainer.innerHTML = markup;
 
     } else if (numberOfCountries > 1 && numberOfCountries <= 10) {
         //todo разметка СПИСКА стран:
-        // refs.countriesList.innerHTML = "";
         const markup = createCountriesList(countries);
         refs.countriesList.innerHTML = markup;
 
     } else if (numberOfCountries > 10) {
-        refs.countriesList.innerHTML = "";
-        refs.countryInfoContainer.innerHTML = "";
         Notiflix.Notify.success("Too many matches found. Please enter a more specific name.", { timeout: 3000, },);
     }
 
