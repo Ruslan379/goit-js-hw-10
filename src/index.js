@@ -34,11 +34,12 @@ function onInput(evt) {
     evt.preventDefault(); //? отменить действие по умолчанию - preventDefault().
 
     // console.log("Вешаю слушателя на поле ввода данных - input");
-    const countryInput = evt.target.value; //! countryInput - данные с input
+    const countryInput = evt.target.value.trim(); //! countryInput - данные с input
     console.log(countryInput);
 
     //! Очищаем разметку перед HTTP-запросом
     deleteMarkup()
+    if (countryInput === "") return;
 
     //!  Вызываем ф-ция, которая делает HTTP-запрос:
     API.fetchCountries(countryInput)
