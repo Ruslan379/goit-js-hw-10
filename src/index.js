@@ -3,7 +3,7 @@ import './css/styles.css';
 const DEBOUNCE_DELAY = 300;
 
 
-const r = fetch("https://restcountries.com/v3.1/name/peru")
+const r = fetch("https://restcountries.com/v3.1/name/swed")
     .then(response => {
         return response.json();
     })
@@ -33,12 +33,15 @@ function createCountriCardMarkup(countries) {
             const valuesLanguages = Object.values(languages).join(", ");
             return `
                 <div class="card-country">
-                <img class="country-flag"
-                    width = 100 px
-                    src="${svg}"
-                    alt="${official}"
-                />
-                <h2 class="card-title">Capital: ${official}</h2>
+                    <div class="country-flag">
+                        <img class="img-country-flag"
+                            width = 30 px
+                            src="${svg}"
+                            alt="${official}"
+                        />
+                        <h1 class="card-title">${official}</h1>
+                    </div>
+                <p class="card-capital">Capital: ${capital}</p>
                 <p class="card-population">Population: ${population}</p>
                 <p class="card-languages">languages: ${valuesLanguages}</p>
                 </div>
