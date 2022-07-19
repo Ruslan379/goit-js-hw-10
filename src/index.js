@@ -1,43 +1,64 @@
+//? 1.0.Получаем ссылку на div-контейнер для разметки ОДНОЙ страны:
+// const countryInfoContainer = document.querySelector('.country-info');
+
+//todo 2.0.Получаем ссылку на список для разметки СПИСКА стран:
+// const countriesList = document.querySelector('.country-list');
+
+
+
+
+//!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 import './css/styles.css';
+
+import debounce from 'lodash.debounce';
+
+import getRefs from './js/get-refs.js'; //! Импорт всех ссылок с ./js/get-refs.js
+
+const refs = getRefs(); //! Создаем объект всех ссылок refs.*
+
 
 const DEBOUNCE_DELAY = 300;
 
+//!  Создаем слушателя событий на поле ввода данных - input:
+refs.input.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY)); //! сюда вешаем DEBOUNCE_DELAY = 300;
 
-const r = fetch("https://restcountries.com/v3.1/name/uni")
-    .then(response => {
-        return response.json();
-    })
-    .then(countries => {
-        console.log(countries);
-        // тут надо ставить условие при котором выбирается разная функция для markup
 
-        //! разметка ОДНОЙ страны:
-        const markup = createCountryCardMarkup(countries);
-        countryInfoContainer.innerHTML = markup;
+//!  Ф-ция, к-рая прослушивает события на поле ввода данных - input:
+function onInput(evt) {
+    evt.preventDefault(); //? отменить действие по умолчанию - preventDefault().
 
-        //todo разметки СПИСКА стран:
-        // const markup = createCountriesList(countries);
-        // countriesList.innerHTML = markup;
+    // console.log("Вешаю слушателя на поле ввода данных - input");
+    const t = evt.target.value;
+    console.log(t);
+}
 
-        console.log(markup);
-    })
-    .catch(error => {
-        console.log(error);
-    });
 
-// console.log(countries);
 
-//! 1.0.Получаем ссылку на div-контейнер для разметки ОДНОЙ страны:
-const countryInfoContainer = document.querySelector('.country-info');
-// console.log(ImageContainer);
+//*  Вызываем ф-ция, которая делает HTTP-запрос
+fetchCountries("un")
+    .then(renderCountriesCard) //* Рисование интерфейса выносим в отдельную ф-цию - renderCountriesCard
+    .catch(error => console.log(error));
 
-//todo 2.0.Получаем ссылку на список для разметки СПИСКА стран:
-const countriesList = document.querySelector('.country-list');
+
+//*   Ф-ция, которая делает HTTP-запрос на ресурс name 
+//*  и возвращает промис с массивом стран по ID или Name:
+function fetchCountries(name) {
+    return fetch(`https://restcountries.com/v3.1/name/${name}`)
+        .then(response => {
+            return response.json();
+        })
+
+}
+
+
+
+
 
 //!   1.2.Добавляем новую разметку в div-контейнер с помощью insertAdjacentHTML:
 // countryInfoContainer.insertAdjacentHTML('beforeend', createCountriCardMarkup);
 
-//!   1.1.Ф-ция, к-рая создает массив с новой разметкой для ОДНОЙ страны:
+//?   1.1.Ф-ция, к-рая создает массив с новой разметкой для ОДНОЙ страны:
 function createCountryCardMarkup(countries) {
     return countries
         .map(({ name: { official }, capital, population, flags: { svg }, languages }) => {
@@ -83,3 +104,20 @@ function createCountriesList(countries) {
         })
         .join('');
 }
+
+//* Ф-ция, к-рая отрисовывает интерфейс:
+function renderCountriesCard(countries) {
+    // тут надо ставить условие при котором выбирается разная функция для markup
+
+    //? разметка ОДНОЙ страны:
+    // const markup = createCountryCardMarkup(countries);
+    // refs.countryInfoContainer.innerHTML = markup;
+
+    //todo разметка СПИСКА стран:
+    const markup = createCountriesList(countries);
+    refs.countriesList.innerHTML = markup;
+
+    // console.log(markup);
+}
+
+
