@@ -30,15 +30,17 @@ const countryInfoContainer = document.querySelector('.country-info');
 function createCountriCardMarkup(countries) {
     return countries
         .map(({ name: { official }, capital, population, flags: { svg }, languages }) => {
+            const valuesLanguages = Object.values(languages).join(", ");
             return `
                 <div class="card-country">
                 <img class="country-flag"
+                    width = 100 px
                     src="${svg}"
                     alt="${official}"
                 />
-                <h2 class="card-title">Capital: "${official}"</h2>
-                <p class="card-population">Population: "${population}"</p>
-                <p class="card-languages">languages: "${languages}"</p>
+                <h2 class="card-title">Capital: ${official}</h2>
+                <p class="card-population">Population: ${population}</p>
+                <p class="card-languages">languages: ${valuesLanguages}</p>
                 </div>
             `;
         })
