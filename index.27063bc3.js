@@ -1,0 +1,5 @@
+!function(){fetch("https://restcountries.com/v3.1/name/peru").then((function(n){return n.json()})).then((function(c){console.log(c);var a=
+//!   1.2.Добавляем новую разметку в div-контейнер с помощью insertAdjacentHTML:
+//!   1.1.Ф-ция, к-рая создает массив с новой разметкой одной страны:
+function(n){return n.map((function(n){var c=n.name.official,a=(n.capital,n.population),o=n.flags.svg,t=n.languages;return'\n                <div class="card-country">\n                <img class="country-flag"\n                    src="'.concat(o,'"\n                    alt="').concat(c,'"\n                />\n                <h2 class="card-title">Capital: "').concat(c,'"</h2>\n                <p class="card-population">Population: "').concat(a,'"</p>\n                <p class="card-languages">languages: "').concat(t,'"</p>\n                </div>\n            ')})).join("")}(c);console.log(a),n.innerHTML=a})).catch((function(n){console.log(n)}));var n=document.querySelector(".country-info")}();
+//# sourceMappingURL=index.27063bc3.js.map
